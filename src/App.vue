@@ -16,7 +16,15 @@
 			</b-form-group>
 			<hr>
 			<b-button @click="salvar" size="lg" variant="primary">Salvar</b-button>
+			<b-button class="ml-2" @click="obterUsuarios" size="lg" variant="success">Obter Usuários</b-button>
 		</b-card>
+		<b-list-group>
+			<b-list-group-item v-for="(usuario, index) in usuarios" :key="index">
+				<strong>Nome: </strong> {{ usuario.nome }}<br>
+				<strong>E-mail: </strong> {{ usuario.email }}<br>
+				<strong>ID: </strong> {{ index }}
+			</b-list-group-item>
+		</b-list-group>
 	</div>
 </template>
 
@@ -24,6 +32,7 @@
 export default {
   data() {
     return {
+      usuarios: [],
       usuario: {
         nome: "",
         email: "",
@@ -32,15 +41,24 @@ export default {
   },
 
   methods: {
+    // POST para fazer a inclusão dos dados no FireBase
     salvar() {
-      //   console.log(this.usuario);
       this.$http.post("usuarios.json", this.usuario).then((resp) => {
         this.usuario.nome = "";
         this.usuario.email = "";
       });
     },
+
+    // GET para consultar
+    obterUsuarios() {
+      this.$http.get("usuarios.json").then((resposta) => {
+        this.usuarios = resposta.data;
+        // console.log(this.usuarios);
+      });
+    },
   },
 
+  // 	----- TESTANDO A API -----
   //   created() {
   //     this.$http
   //       .post("usuarios.json", {
@@ -49,7 +67,8 @@ export default {
   //       })
   //       .then((resposta) => console.log(resposta));
   //   },
-  // teste como se fosse mais uma API
+  //
+  // ----- TESTE COMO SE FOSSE MAIS UMA API -----
   //   created() {
   //     this.$teste
   //       .post("usuarios.json", {

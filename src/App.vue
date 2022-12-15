@@ -1,6 +1,8 @@
 <template>
 	<div id="app" class="container">
 		<h1>HTTP com Axios</h1>
+    <b-alert show dismissible v-for="mensagem in mensagens" :key="mensagem.texto"
+    :variant="mensagem.tipo">{{mensagem.texto}}</b-alert>
 		<b-card>
 			<b-form-group label="Nome">
 				<b-form-input type="text" size="lg"
@@ -34,6 +36,7 @@
 export default {
   data() {
     return {
+      mensagens: [],
       usuarios: [],
       id: null,
       usuario: {
@@ -48,6 +51,7 @@ export default {
       this.usuario.nome = "";
       this.usuario.email = "";
       this.id = null;
+      this.mensagens = [];
     },
 
     carregar(id) {
@@ -56,16 +60,28 @@ export default {
     },
 
     excluir(id) {
-      this.$http.delete(`/usuarios/${id}.json`).then(() => this.limpar());
+      this.$http
+        .delete(`/usuarios/${id}.json`)
+        .then(() => this.limpar())
+        .catch(() => {
+          this.mensagens.push({
+            texto: "Problema para excluir!",
+            tipo: "danger",
+          });
+        });
     },
 
     // POST (Create) para fazer a inclusão dos dados no FireBase
     salvar() {
       const metodo = this.id ? "patch" : "post";
       const finalUrl = this.id ? `/${this.id}.json` : ".json";
-      this.$http[metodo](`/usuarios${finalUrl}`, this.usuario).then(() =>
-        this.limpar()
-      );
+      this.$http[metodo](`/usuarios${finalUrl}`, this.usuario).then(() => {
+        this.limpar();
+        this.mensagens.push({
+          texto: "Operação realizada com sucesso!",
+          tipo: "success",
+        });
+      });
       // this.$http.post("usuarios.json", this.usuario).then(() => {
       //   this.limpar();
       // });

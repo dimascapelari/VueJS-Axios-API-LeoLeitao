@@ -19,10 +19,10 @@
 			<b-button class="ml-2" @click="obterUsuarios" size="lg" variant="success">Obter Usuários</b-button>
 		</b-card>
 		<b-list-group>
-			<b-list-group-item v-for="(usuario, index) in usuarios" :key="index">
+			<b-list-group-item v-for="(usuario, id) in usuarios" :key="id">
 				<strong>Nome: </strong> {{ usuario.nome }}<br>
 				<strong>E-mail: </strong> {{ usuario.email }}<br>
-				<strong>ID: </strong> {{ index }}
+				<strong>ID: </strong> {{ id }}
 			</b-list-group-item>
 		</b-list-group>
 	</div>
@@ -53,7 +53,7 @@ export default {
     obterUsuarios() {
       this.$http.get("usuarios.json").then((resposta) => {
         this.usuarios = resposta.data;
-        // console.log(this.usuarios);
+        console.log(this.usuarios);
       });
     },
   },
